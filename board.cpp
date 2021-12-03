@@ -1,31 +1,104 @@
-enum squares{
-  A1, B1, C1, D1, E1, F1, H1,
-  A2, B2, C2, D2, E2, F2, H2,
-  A3, B3, C3, D3, E3, F3, H3,
-  A4, B4, C4, D4, E4, F4, H4,
-  A5, B5, C5, D5, E5, F5, H5,
-  A6, B6, C6, D6, E6, F6, H6,
-  A7, B7, C7, D7, E7, F7, H7,
-  A8, B8, C8, D8, E8, F8, H8,
-  NO_SQ
-};
+#include "board.h"
 
-enum pieces
-{ EMPTY = 0,
-  wP = 11,
-  wN,
-  wB,
-  wR,
-  wQ,
-  wK,
-  bP = 21,
-  bN,
-  bB,
-  bR,
-  bQ,
-  bK
-};
+#include <vector>
+#include <iostream>
+#include <ctype.h>
 
-class board(){
-  class board: init()
+// Default constructor
+Board::Board()
+{
+    cb = initializeBoard();
+    //wa = initializeWhiteAttackBoard();
+    //ba = initializeBlackAttackBoard();
+    
+    lm = initializeLastMove();
+    
+    wcp = true;
+    bcp = true;
+    
+    wic = false;
+    bic = false;
+    
+    wk = 4;
+    bk = 60;
+    
+    turn = 0; // White turn
 }
+
+// Constructor with full arguments
+Board::Board(std::vector<char> CB, LAST_MOVE LM, bool WCP, bool BCP, bool WIC, bool BIC, unsigned int WK, unsigned int BK, bool t)
+{
+    cb = CB;
+    lm = LM;
+    wcp = WCP;
+    bcp = BCP;
+    wic = WIC;
+    bic = BIC;
+    wk = WK;
+    bk = BK;
+    turn = t;
+}
+
+std::vector<char> Board::initializeBoard() {
+    std::vector<char> board(SIZE, '-'); // initialize vector with size: vector<int> x (size, value)
+
+    // Initialize white pieces
+    board[0] = 'R';    board[1] = 'N';    board[2] = 'B';    board[3] = 'Q';
+    board[4] = 'K';    board[5] = 'B';    board[6] = 'N';    board[7] = 'R';
+    // White pawns
+    board[8] = 'P';    board[9] = 'P';    board[10] = 'P';   board[11] = 'P';
+    board[12] = 'P';   board[13] = 'P';   board[14] = 'P';   board[15] = 'P';
+
+    // Initialize black pieces
+    board[56] = 'r';   board[57] = 'n';   board[58] = 'b';   board[59] = 'q';
+    board[60] = 'k';   board[61] = 'b';   board[62] = 'n';   board[63] = 'r';
+    // Black pawns
+    board[48] = 'p';   board[49] = 'p';   board[50] = 'p';   board[51] = 'p';
+    board[52] = 'p';   board[53] = 'p';   board[54] = 'p';   board[55] = 'p';
+    
+    return board;
+}
+
+/*
+std::vector<char> Board::initializeWhiteAttackBoard() {
+    std::vector<char> board(SIZE, '-'); // initialize vector with size: vector<int> x (size, value)
+
+    board[16] = 'W';    board[17] = 'W';    board[18] = 'W';    board[19] = 'W';
+    board[20] = 'W';    board[21] = 'W';    board[22] = 'W';    board[23] = 'W';
+    
+    return board;
+}
+
+std::vector<char> Board::initializeBlackAttackBoard() {
+    std::vector<char> board(SIZE, '-'); // initialize vector with size: vector<int> x (size, value)
+    
+    board[32] = 'B';    board[33] = 'B';    board[34] = 'B';    board[35] = 'B';
+    board[36] = 'B';    board[37] = 'B';    board[38] = 'B';    board[39] = 'B';
+    
+    return board;
+}
+*/
+
+LAST_MOVE Board::initializeLastMove() {
+    LAST_MOVE lm;
+    lm.piece = 'n';
+    lm.start = 42;
+    lm.end = 57;
+    
+    return lm;
+}
+
+void Board::printBoard(const std::vector<char> & board) {
+    for (int i = 7; i >= 0; i--) {
+        for (int j = 0; j < 8; j++) {
+            std::cout << board[i * 8 + j] << ' ';
+        }
+        std::cout << std::endl;
+    }
+}
+
+Board::~Board()
+{
+    
+}
+
